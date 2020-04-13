@@ -35,11 +35,11 @@ public class UserController {
 	 * @param pageSize
 	 * @return
 	 */
-//	@RequestMapping("list")
-//	@RequiresPermissions("user:list")
-//	public Object list(Integer pageNo, Integer pageSize,Integer age) {
-//		
-//	}
+	@RequestMapping("list")
+	@RequiresPermissions("user:list")
+	public Object list(Integer pageNo, Integer pageSize,Integer age) {
+		return true;
+	}
 	
 	/**
 	  * 添加用户

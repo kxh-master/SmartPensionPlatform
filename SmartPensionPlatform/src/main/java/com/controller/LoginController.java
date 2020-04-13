@@ -2,9 +2,10 @@ package com.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,12 @@ public class LoginController {
 	@Autowired
 	private PersonRepository personService;
 	
-	@RequestMapping(value = "login", method = RequestMethod.POST)
+	/**
+	  * 进入登录页面
+	 * @param user
+	 * @return
+	 */
+	@RequestMapping(value = "toLogin", method = RequestMethod.POST)
     public CommonResult login(@RequestBody User user) {
         if (user.getUserName().equals("admin") && user.getPassWord().equals("123456"))
             return CommonResult.success("admin");
@@ -42,34 +48,35 @@ public class LoginController {
             return CommonResult.validateFailed();
     }
 
-    @GetMapping("unauthc")
-    public Object unauthc() {
-        return "Here is Unauthc page";
-    }
-    
-    @RequestMapping("getList")
-    @ResponseBody
-    public List<User> getList(){
-    	List<User> users = userService.findAll();
-    	return users;
-    }
-
-    @GetMapping("doLogin")
-    public Object doLogin(@RequestParam String username, @RequestParam String password) {
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-        SecurityUtils.getSubject().getSession().setTimeout(1000*30);
+    /**
+     * 执行登录操作
+     * @param userName
+     * @param passWord
+     * @return
+     */
+    @GetMapping("login")
+    public Object doLogin(@RequestParam String userName, @RequestParam String passWord) {
+        UsernamePasswordToken token = new UsernamePasswordToken(userName, passWord);
         Subject subject = SecurityUtils.getSubject();
         try {
             subject.login(token);
-        } catch (IncorrectCredentialsException ice) {
-            return "password error!";
-        } catch (UnknownAccountException uae) {
-            return "username error!";
-        }
-
-        User user = userService.findByUserName(username);
+        } catch (AuthenticationException e) { 
+	    	return "身份验证失败！";
+	    }
+        User user = userService.findByUserName(userName);
         subject.getSession().setAttribute("user", user);
+        subject.getSession().setAttribute("user1", 123);
         return "SUCCESS";
+    }
+    
+    @RequestMapping("toLogin")
+    public Object toLogin() {
+    	return "请重新登录";
+    }
+    
+    @GetMapping("unauthc")
+    public Object unauthc() {
+        return "您没有该资源的访问权限";
     }
 
     @GetMapping("register")

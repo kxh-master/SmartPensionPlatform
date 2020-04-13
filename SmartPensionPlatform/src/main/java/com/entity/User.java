@@ -61,7 +61,7 @@ public class User {
 	//下边这个注解中写的是关系，只要在一边配置，另一边详细写就好
 	//	如果是FetchType.EAGER，那么表示取出这条数据时，它关联的数据也同时取出放入内存中
 	//  如果是FetchType.LAZY，那么取出这条数据时，它关联的数据并不取出来，在同一个session中，什么时候要用，就什么时候取
-	@ManyToMany(fetch= FetchType.EAGER)
+	@ManyToMany
 	//@JoinTable:映射中间表
     //name属性是关联中间表的名称，
     // joinColumns属性表示，在保存关系中的表中，所保存关联关系的外键的字段。并配合@JoinColumn标记使用。

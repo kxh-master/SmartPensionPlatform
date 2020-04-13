@@ -27,14 +27,14 @@ public class ShiroConfig {
 
         Map<String, String> filterChainDefinitionMap = new HashMap<String, String>();
         shiroFilterFactoryBean.setLoginUrl("/login");
-        shiroFilterFactoryBean.setUnauthorizedUrl("/unauthc");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/unauthc");//跳转到无权限页面
         shiroFilterFactoryBean.setSuccessUrl("/home/index");
-        
-        filterChainDefinitionMap.put("/*", "anon");
-        filterChainDefinitionMap.put("/user/index", "authc");
-        filterChainDefinitionMap.put("/authc/admin", "roles[admin]");
-        filterChainDefinitionMap.put("/authc/renewable", "perms[Create,Update]");
-        filterChainDefinitionMap.put("/authc/removable", "perms[Delete]");
+        //匹配规则，从上到下
+//        filterChainDefinitionMap.put("/user/index", "authc");//表示需要授权,认证(登录)才能使用
+//        filterChainDefinitionMap.put("/authc/admin", "roles[admin]");//需要管理员角色
+//        filterChainDefinitionMap.put("/user/**", "perms[user:add,user:edit]");//需要相应操作权限
+        filterChainDefinitionMap.put("/logout", "logout");//退出登录
+        filterChainDefinitionMap.put("/*", "anon");//表示可以匿名使用（需要认证(登录))
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
@@ -75,7 +75,7 @@ public class ShiroConfig {
     @Bean
     public DefaultWebSessionManager getDefaultWebSessionManager() {
 		DefaultWebSessionManager defaultWebSessionManager = new DefaultWebSessionManager();
-		defaultWebSessionManager.setGlobalSessionTimeout(1000 * 60 * 30);// 会话过期时间，单位：毫秒(在无操作时开始计时)
+		defaultWebSessionManager.setGlobalSessionTimeout(1000 * 30);// 会话过期时间，单位：毫秒(在无操作时开始计时)
 		defaultWebSessionManager.setSessionValidationSchedulerEnabled(true);
 		defaultWebSessionManager.setSessionIdCookieEnabled(true);
 		return defaultWebSessionManager;
