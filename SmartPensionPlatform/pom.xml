@@ -79,11 +79,15 @@
 <!-- 			<version>1.3.6</version> -->
 <!-- 		</dependency> -->
 		<!-- thymeleaf頁面展示模板 -->
+<!-- 		<dependency> -->
+<!-- 		    <groupId>org.springframework.boot</groupId> -->
+<!-- 		    <artifactId>spring-boot-starter-thymeleaf</artifactId> -->
+<!-- 		</dependency> -->
 		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
-		
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.8</version>
+        </dependency>
 		<dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
@@ -136,6 +140,12 @@
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-data-redis</artifactId>
 		    <version>2.2.3.RELEASE</version>
+		</dependency>
+		<!-- redis管理sessionid -->
+		<dependency>
+		    <groupId>org.crazycake</groupId>
+		    <artifactId>shiro-redis</artifactId>
+		    <version>2.8.12</version>
 		</dependency>
 		
 	</dependencies>

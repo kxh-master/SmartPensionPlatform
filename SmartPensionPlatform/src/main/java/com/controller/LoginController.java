@@ -1,9 +1,5 @@
 package com.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -14,12 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.common.CommonResult;
-import com.entity.Person;
-import com.entity.PersonRepository;
 import com.entity.User;
 import com.service.UserService;
 import com.util.PasswordUtil;
@@ -32,41 +25,25 @@ public class LoginController {
 	@Autowired
 	private PasswordUtil passwordUtil;
 	
-	@Autowired
-	private PersonRepository personService;
-	
-	/**
-	  * 进入登录页面
-	 * @param user
-	 * @return
-	 */
-	@RequestMapping(value = "toLogin", method = RequestMethod.POST)
-    public CommonResult login(@RequestBody User user) {
-        if (user.getUserName().equals("admin") && user.getPassWord().equals("123456"))
-            return CommonResult.success("admin");
-        else
-            return CommonResult.validateFailed();
-    }
-
     /**
      * 执行登录操作
      * @param userName
      * @param passWord
      * @return
      */
-    @GetMapping("login")
-    public Object doLogin(@RequestParam String userName, @RequestParam String passWord) {
-        UsernamePasswordToken token = new UsernamePasswordToken(userName, passWord);
+	@RequestMapping(value = "login", method = RequestMethod.POST)
+    public Object doLogin(@RequestBody User user) {
+        UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassWord());
         Subject subject = SecurityUtils.getSubject();
         try {
             subject.login(token);
         } catch (AuthenticationException e) { 
-	    	return "身份验证失败！";
+        	//用户名或者密码错误
+	    	return CommonResult.validateFailed();
 	    }
-        User user = userService.findByUserName(userName);
+        user = userService.findByUserName(user.getUserName());
         subject.getSession().setAttribute("user", user);
-        subject.getSession().setAttribute("user1", 123);
-        return "SUCCESS";
+        return CommonResult.success(user.getName());
     }
     
     @RequestMapping("toLogin")
@@ -79,23 +56,21 @@ public class LoginController {
         return "您没有该资源的访问权限";
     }
 
+    /**
+         * 注册用户
+     * @param userName
+     * @param passWord
+     * @return
+     */
     @GetMapping("register")
-    public Object register(@RequestParam String username, @RequestParam String password) {
+    public Object register(@RequestParam String userName, @RequestParam String passWord) {
         User user = new User();
-        user.setUserName(username);
-        user.setPassWord(password);
+        user.setUserName(userName);
+        user.setPassWord(passWord);
         passwordUtil.encryptPassword(user);
 
         userService.save(user);
         return "SUCCESS";
     }
     
-    @ResponseBody
-    @GetMapping("findAll")
-    public Object getPersionList() {
-    	
-    	List<Person> personList =(List<Person>) personService.findAll();
-
-        return personList;
-    }
 }

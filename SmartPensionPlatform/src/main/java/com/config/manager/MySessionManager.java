@@ -23,6 +23,8 @@ public class MySessionManager extends DefaultWebSessionManager{
  
     public MySessionManager() {
         super();
+        //设置session过期时间，默认30分钟
+//        setGlobalSessionTimeout(DEFAULT_GLOBAL_SESSION_TIMEOUT * 48);
     }
  
     @Override
