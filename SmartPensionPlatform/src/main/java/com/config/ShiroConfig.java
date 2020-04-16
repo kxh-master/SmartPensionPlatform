@@ -16,6 +16,7 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.crazycake.shiro.RedisSessionDAO;
@@ -23,7 +24,6 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import com.config.manager.MySessionManager;
 import com.interceptor.shiro.CustomAuthenticationFilter;
@@ -32,14 +32,14 @@ import com.util.PasswordUtil;
 
 @Configuration
 public class ShiroConfig {
-	@Value("${spring.redis.shiro.host}")
+	@Value("${spring.redis.host}")
     private String host;
-    @Value("${spring.redis.shiro.port}")
+    @Value("${spring.redis.port}")
     private int port;
-    @Value("${spring.redis.shiro.timeout}")
+    @Value("${spring.redis.timeout}")
     private int timeout;
-    @Value("${spring.redis.shiro.password}")
-    private String password;
+//    @Value("${spring.redis.password}")
+//    private String password;
 
 	
 	@Bean
@@ -49,14 +49,16 @@ public class ShiroConfig {
 
         Map<String, String> filterChainDefinitionMap = new HashMap<String, String>();
         shiroFilterFactoryBean.setLoginUrl("/login");
-        shiroFilterFactoryBean.setUnauthorizedUrl("/unauthc");//跳转到无权限页面
+        shiroFilterFactoryBean.setUnauthorizedUrl("/unauthc");
         shiroFilterFactoryBean.setSuccessUrl("/home/index");
         //匹配规则，从上到下
 //        filterChainDefinitionMap.put("/user/index", "authc");//表示需要授权,认证(登录)才能使用
 //        filterChainDefinitionMap.put("/authc/admin", "roles[admin]");//需要管理员角色
 //        filterChainDefinitionMap.put("/user/**", "perms[user:add,user:edit]");//需要相应操作权限
         filterChainDefinitionMap.put("/logout", "logout");//退出登录
-        filterChainDefinitionMap.put("/*", "anon");//表示可以匿名使用（需要认证(登录))
+        filterChainDefinitionMap.put("/login", "anon");
+//        filterChainDefinitionMap.put("/*", "anon");//表示可以匿名使用（需要认证(登录))
+        filterChainDefinitionMap.put("/**", "corsAuthenticationFilter");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         
         //自定义过滤器
@@ -82,7 +84,10 @@ public class ShiroConfig {
         return shiroRealm;
     }
     
-
+    /**
+     * 添加shiro缓存
+     * @return
+     */
     @Bean
     public EhCacheManager getCache() {
     	return new EhCacheManager();
@@ -94,7 +99,7 @@ public class ShiroConfig {
         securityManager.setRealm(shiroRealm());
 //        securityManager.setCacheManager(getCache());
         // 自定义缓存实现 使用redis
-        securityManager.setCacheManager(cacheManager());
+        securityManager.setCacheManager(cacheManagers());
         // 自定义session管理 使用redis
         securityManager.setSessionManager(sessionManager());
         //注入记住我管理器
@@ -110,7 +115,7 @@ public class ShiroConfig {
      * @return
      */
     @Bean
-    public RedisCacheManager cacheManager() {
+    public RedisCacheManager cacheManagers() {
         RedisCacheManager redisCacheManager = new RedisCacheManager();
         redisCacheManager.setRedisManager(redisManager());
         return redisCacheManager;
@@ -124,16 +129,6 @@ public class ShiroConfig {
         return mySessionManager;
     }
     
- // 配置org.apache.shiro.web.session.mgt.DefaultWebSessionManager(shiro session的管理)
-//    @Bean
-//    public DefaultWebSessionManager getDefaultWebSessionManager() {
-//		DefaultWebSessionManager defaultWebSessionManager = new DefaultWebSessionManager();
-//		defaultWebSessionManager.setGlobalSessionTimeout(1000 * 30);// 会话过期时间，单位：毫秒(在无操作时开始计时)
-//		defaultWebSessionManager.setSessionValidationSchedulerEnabled(true);
-//		defaultWebSessionManager.setSessionIdCookieEnabled(true);
-//		return defaultWebSessionManager;
-//    }
-
     /**
      * RedisSessionDAO shiro sessionDao层的实现 通过redis
      * <p>
@@ -159,9 +154,20 @@ public class ShiroConfig {
         redisManager.setPort(port);
         redisManager.setExpire(1800);// 配置缓存过期时间
         redisManager.setTimeout(timeout);
-        redisManager.setPassword(password);
+//        redisManager.setPassword(password);
         return redisManager;
     }
+    
+ // 配置org.apache.shiro.web.session.mgt.DefaultWebSessionManager(shiro session的管理)
+//    @Bean
+//    public DefaultWebSessionManager getDefaultWebSessionManager() {
+//		DefaultWebSessionManager defaultWebSessionManager = new DefaultWebSessionManager();
+//		defaultWebSessionManager.setGlobalSessionTimeout(1000 * 30);// 会话过期时间，单位：毫秒(在无操作时开始计时)
+//		defaultWebSessionManager.setSessionValidationSchedulerEnabled(true);
+//		defaultWebSessionManager.setSessionIdCookieEnabled(true);
+//		return defaultWebSessionManager;
+//    }
+
     
     /**
      * cookie管理对象;

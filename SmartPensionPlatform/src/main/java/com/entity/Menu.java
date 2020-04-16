@@ -1,5 +1,6 @@
 package com.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,8 +16,10 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="sys_menu")
-public class Menu {
- 
+public class Menu implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="menu_id",columnDefinition="bigint(36) COMMENT'菜单id' ")

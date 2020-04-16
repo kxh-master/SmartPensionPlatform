@@ -1,9 +1,13 @@
 package com.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +20,7 @@ import com.common.CommonResult;
 import com.entity.User;
 import com.service.UserService;
 import com.util.PasswordUtil;
+import com.vo.UserVO;
 
 @RestController
 public class LoginController {
@@ -41,9 +46,16 @@ public class LoginController {
         	//用户名或者密码错误
 	    	return CommonResult.validateFailed();
 	    }
-        user = userService.findByUserName(user.getUserName());
-        subject.getSession().setAttribute("user", user);
-        return CommonResult.success(user.getName());
+        Map<String,Object> map =new HashMap<String,Object>();
+        user = userService.findUserByName(user.getUserName());
+        UserVO userVO = new UserVO();
+        if(user!=null) {
+        	BeanUtils.copyProperties(user, userVO);
+        	subject.getSession().setAttribute("user", userVO);
+        }
+        map.put("token",subject.getSession().getId());
+        map.put("user",userVO);
+        return CommonResult.success(map);
     }
     
     @RequestMapping("toLogin")

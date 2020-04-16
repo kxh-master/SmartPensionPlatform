@@ -45,7 +45,10 @@ public class UserServiceImpl implements UserService{
 	
 	public Integer update(User user) {
 		return userRepository.update(user);
-		
+	}
+	
+	public User findUserByName(String name) {
+		return userRepository.findUserByName(name);
 	}
 	
 	//分页查询 + 动态条件 + nativeQuery = true
