@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.common.CommonResult;
+import com.common.Result;
 import com.entity.User;
 import com.service.UserService;
 import com.util.BaseUtil;
@@ -53,9 +53,9 @@ public class UserController {
     public Object add(User user) {
 		User users = userService.save(user);
 		if(users!=null) {
-			return CommonResult.success(users.getUserName());
+			return Result.success();
 		}
-		return CommonResult.failed();
+		return Result.failed();
     }
     
     /**
@@ -65,7 +65,10 @@ public class UserController {
     @GetMapping("edit")
     @RequiresPermissions("user:edit")//权限管理;
     public Object edit(User user) {
-        return BaseUtil.isSuccess(userService.update(user));
+    	if(BaseUtil.isSuccess(userService.update(user))) {
+    		return Result.success();
+    	}
+        return Result.failed();
     }
 
     /**
@@ -75,7 +78,10 @@ public class UserController {
     @RequestMapping("delete")
     @RequiresPermissions("user:delete")
     public Object delete(@RequestParam("userId")Integer userId) {
-    	return BaseUtil.isSuccess(userService.delete(userId));
+    	if(BaseUtil.isSuccess(userService.delete(userId))) {
+    		return Result.success();
+    	}
+    	return Result.failed();
     }
 
 }

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.common.CommonResult;
+import com.common.Result;
 import com.entity.User;
 import com.service.UserService;
 import com.util.PasswordUtil;
@@ -44,7 +44,7 @@ public class LoginController {
             subject.login(token);
         } catch (AuthenticationException e) { 
         	//用户名或者密码错误
-	    	return CommonResult.validateFailed();
+	    	return Result.validateFailed();
 	    }
         Map<String,Object> map =new HashMap<String,Object>();
         user = userService.findUserByName(user.getUserName());
@@ -55,7 +55,7 @@ public class LoginController {
         }
         map.put("token",subject.getSession().getId());
         map.put("user",userVO);
-        return CommonResult.success(map);
+        return Result.success(map);
     }
     
     @RequestMapping("toLogin")
