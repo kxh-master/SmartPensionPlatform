@@ -41,9 +41,9 @@ public class ShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        String userId =principals.getPrimaryPrincipal().toString();
+        User user =(User) principals.getPrimaryPrincipal();
         //获取角色
-        Set<Role> roleList = roleRepository.findRolesByUserId(userId);
+        Set<Role> roleList = roleRepository.findRolesByUserId(user.getUserId().toString());
         Set<String> roleIds = new HashSet<>(roleList.size());
         for (Role role : roleList) {
             authorizationInfo.addRole(role.getRoleAlias());
@@ -70,7 +70,7 @@ public class ShiroRealm extends AuthorizingRealm {
         if (user == null) {
             return null;
         }
-        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(user.getUserId(), user.getPassWord(),
+        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(user, user.getPassWord(),
                 ByteSource.Util.bytes(user.getCredentialsSalt()), getName());
         return authenticationInfo;
     }

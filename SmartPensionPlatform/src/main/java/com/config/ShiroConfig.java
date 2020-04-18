@@ -34,12 +34,12 @@ import com.util.PasswordUtil;
 public class ShiroConfig {
 	@Value("${spring.redis.host}")
     private String host;
-    @Value("${spring.redis.port}")
-    private int port;
     @Value("${spring.redis.timeout}")
     private int timeout;
-//    @Value("${spring.redis.password}")
-//    private String password;
+    @Value("${spring.redis.password}")
+    private String password;
+    @Value("${spring.redis.cachetime}")
+    private int cachetime;
 
 	
 	@Bean
@@ -70,18 +70,18 @@ public class ShiroConfig {
     }
 
     @Bean
+    public ShiroRealm shiroRealm() {
+    	ShiroRealm shiroRealm = new ShiroRealm();
+        shiroRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+        return shiroRealm;
+    }
+    
+    @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher() {
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
         hashedCredentialsMatcher.setHashAlgorithmName(PasswordUtil.ALGORITHM_NAME); // 散列算法
         hashedCredentialsMatcher.setHashIterations(PasswordUtil.HASH_ITERATIONS); // 散列次数
         return hashedCredentialsMatcher;
-    }
-
-    @Bean
-    public ShiroRealm shiroRealm() {
-    	ShiroRealm shiroRealm = new ShiroRealm();
-        shiroRealm.setCredentialsMatcher(hashedCredentialsMatcher());
-        return shiroRealm;
     }
     
     /**
@@ -109,8 +109,7 @@ public class ShiroConfig {
     
     /**
      * cacheManager 缓存 redis实现
-     * <p>
-         * 使用的是shiro-redis开源插件
+     * 使用的是shiro-redis开源插件
      *
      * @return
      */
@@ -118,6 +117,10 @@ public class ShiroConfig {
     public RedisCacheManager cacheManagers() {
         RedisCacheManager redisCacheManager = new RedisCacheManager();
         redisCacheManager.setRedisManager(redisManager());
+        //redis中针对不同用户缓存
+        redisCacheManager.setPrincipalIdFieldName("userId");
+        //用户权限信息缓存时间
+        redisCacheManager.setExpire(cachetime);
         return redisCacheManager;
     }
     
@@ -151,8 +154,6 @@ public class ShiroConfig {
     public RedisManager redisManager() {
         RedisManager redisManager = new RedisManager();
         redisManager.setHost(host);
-        redisManager.setPort(port);
-        redisManager.setExpire(1800);// 配置缓存过期时间
         redisManager.setTimeout(timeout);
 //        redisManager.setPassword(password);
         return redisManager;

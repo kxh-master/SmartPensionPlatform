@@ -3,6 +3,8 @@ package com.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -20,6 +22,7 @@ import com.common.Result;
 import com.entity.User;
 import com.service.UserService;
 import com.util.PasswordUtil;
+import com.util.RedisUtil;
 import com.vo.UserVO;
 
 @RestController
@@ -30,6 +33,8 @@ public class LoginController {
 	@Autowired
 	private PasswordUtil passwordUtil;
 	
+	@Autowired
+    private RedisUtil redisUtil;
     /**
      * 执行登录操作
      * @param userName
@@ -65,6 +70,7 @@ public class LoginController {
     
     @GetMapping("unauthc")
     public Object unauthc() {
+    	
         return "您没有该资源的访问权限";
     }
 

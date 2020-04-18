@@ -1,9 +1,14 @@
 package com.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
@@ -18,9 +23,24 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
 @Configuration
 @EnableCaching //开启注解
 public class RedisConfig extends CachingConfigurerSupport{
+	
+//	@Bean
+//    public CacheManager cacheManager(RedisTemplate<String, Object> redisTemplate) {
+//        RedisCacheManager rcm = new RedisCacheManager(redisTemplate);
+//        //设置缓存过期时间
+//        Map<String, Long> expires = new HashMap<>();
+//        expires.put("12h", 3600 * 12L);
+//        expires.put("1h", 3600 * 1L);
+//        expires.put("10m", 60 * 10L);
+//        rcm.setExpires(expires);
+////        rcm.setDefaultExpiration(60 * 60 * 12);//默认过期时间
+//        return rcm;
+//    }
+	
 	/**
      * retemplate相关配置
      * @param factory
