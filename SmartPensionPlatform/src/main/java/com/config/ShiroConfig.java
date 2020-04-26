@@ -34,6 +34,8 @@ import com.util.PasswordUtil;
 public class ShiroConfig {
 	@Value("${spring.redis.host}")
     private String host;
+	@Value("${spring.redis.port}")
+	private String port;
     @Value("${spring.redis.timeout}")
     private int timeout;
     @Value("${spring.redis.password}")
@@ -153,7 +155,7 @@ public class ShiroConfig {
      */
     public RedisManager redisManager() {
         RedisManager redisManager = new RedisManager();
-        redisManager.setHost(host);
+        redisManager.setHost(host+":"+port);
         redisManager.setTimeout(timeout);
 //        redisManager.setPassword(password);
         return redisManager;

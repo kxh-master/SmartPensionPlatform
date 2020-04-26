@@ -60,7 +60,7 @@ public class LoginController {
         }
         map.put("token",subject.getSession().getId());
         map.put("user",userVO);
-        redisUtil.set(userVO.getUserName(),userVO);
+        redisUtil.set(userVO.getUserName(),userVO,10);
         return Result.success(map);
     }
 	
@@ -72,7 +72,7 @@ public class LoginController {
     public Object logout() {
 		UserVO user = (UserVO) SecurityUtils.getSubject().getSession().getAttribute("user");
 		//删除缓存
-		redisUtil.del(user.getUserId().toString());
+		redisUtil.del(user.getUserName());
     	return "请重新登录";
     }
     
