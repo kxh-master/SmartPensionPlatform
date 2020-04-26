@@ -60,7 +60,20 @@ public class LoginController {
         }
         map.put("token",subject.getSession().getId());
         map.put("user",userVO);
+        redisUtil.set(userVO.getUserName(),userVO);
         return Result.success(map);
+    }
+	
+	/**
+	 * 登出操作
+	 * @return
+	 */
+	@RequestMapping("logout")
+    public Object logout() {
+		UserVO user = (UserVO) SecurityUtils.getSubject().getSession().getAttribute("user");
+		//删除缓存
+		redisUtil.del(user.getUserId().toString());
+    	return "请重新登录";
     }
     
     @RequestMapping("toLogin")
@@ -70,7 +83,6 @@ public class LoginController {
     
     @GetMapping("unauthc")
     public Object unauthc() {
-    	
         return "您没有该资源的访问权限";
     }
 

@@ -26,10 +26,15 @@ public class CustomAuthenticationFilter extends FormAuthenticationFilter{
     		if (((HttpServletRequest) request).getMethod().toUpperCase().equals("OPTIONS")) {
                 return true;
             }
+    		System.out.println("path:------"+((HttpServletRequest) request).getMethod());
+    		System.out.println("path:------"+((HttpServletRequest) request).getServletPath());
         }
     	return super.isAccessAllowed(request, response, mappedValue);
     }
 
+    /**
+     * 未登录
+     */
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletResponse res = (HttpServletResponse)response;
@@ -44,4 +49,6 @@ public class CustomAuthenticationFilter extends FormAuthenticationFilter{
         writer.close();
         return false;
     }
+    
+
 }
