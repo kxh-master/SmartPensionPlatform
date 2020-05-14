@@ -1,19 +1,26 @@
 package com.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
-import javax.persistence.criteria.Predicate;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import com.entity.User;
-import com.entity.UserRepository;
+import com.bean.bo.UserBo;
+import com.bean.po.Menu;
+import com.bean.po.Role;
+import com.bean.po.User;
+import com.bean.po.UserRepository;
+import com.bean.vo.MenuVo;
+import com.bean.vo.RoleVo;
+import com.bean.vo.UserVo;
 import com.service.UserService;
 
 @Service
@@ -23,18 +30,30 @@ public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
 	
     @Override
-    public User findByUserName(String userName) {
-        return userRepository.findByUserName(userName);
+    public UserVo findByUserName(String userName) {
+    	User user = userRepository.findByUserName(userName);
+        return getVo(user);
     }
     
     @Transactional(rollbackFor = Exception.class)
-    public User save(User user) {
-    	return userRepository.save(user);
+    public UserVo save(UserBo userbo) {
+    	User user = getPo(userbo);
+    	user =userRepository.save(user);;
+    	UserVo userVo = getVo(user);
+        return userVo;
     }
 
 	@Override
-	public List<User> findAll() {
-		return (List<User>) userRepository.findAll();
+	public List<UserVo> findAll() {
+		List<User> userList = (List<User>) userRepository.findAll();
+		List<UserVo> userVoList = new ArrayList<UserVo>();
+		if(userList!=null && userList.size()>0) {
+			for(User user:userList) {
+				UserVo userVo = getVo(user);
+				userVoList.add(userVo);
+			}
+		}
+        return userVoList;
 	}
 
 	@Transactional(rollbackFor = Exception.class)
@@ -43,12 +62,17 @@ public class UserServiceImpl implements UserService{
 	}
 
 	
-	public Integer update(User user) {
-		return userRepository.update(user);
+	public Integer update(UserBo user) {
+		return userRepository.update(getPo(user));
 	}
 	
-	public User findUserByName(String name) {
-		return userRepository.findUserByName(name);
+	public UserVo findUserByName(String name) {
+		User user = userRepository.findUserByName(name);
+		UserVo userVo = new UserVo();
+		if(user!=null) {
+			BeanUtils.copyProperties(user,userVo);
+		}
+		return userVo;
 	}
 	
 	//分页查询 + 动态条件 + nativeQuery = true
@@ -57,7 +81,7 @@ public class UserServiceImpl implements UserService{
     }
 
 
-    public Page<User> findByCondition(User user, Pageable pageable) {
+    public Page<UserVo> findByCondition(UserBo user, Pageable pageable) {
 //		 return userRepository.findAll((root, query, cb) -> {
 //	            List<Predicate> predicates = new ArrayList<>();
 //	            //equal 示例
@@ -77,5 +101,18 @@ public class UserServiceImpl implements UserService{
 //	        }, pageable);
     	return null;
 	}
+    
+    private User getPo(UserBo bo) {
+		User po = new User();
+		BeanUtils.copyProperties(bo, po);
+		return po;
+	}
+
+	private UserVo getVo(User po) {
+		UserVo vo = new UserVo();
+		BeanUtils.copyProperties(po, vo);
+		return vo;
+	}
+
 
 }

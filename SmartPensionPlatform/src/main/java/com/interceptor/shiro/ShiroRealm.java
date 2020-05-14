@@ -4,6 +4,8 @@ package com.interceptor.shiro;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -15,12 +17,13 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.entity.Menu;
-import com.entity.MenuRepository;
-import com.entity.Role;
-import com.entity.RoleRepository;
-import com.entity.User;
-import com.entity.UserRepository;
+import com.bean.po.Menu;
+import com.bean.po.MenuRepository;
+import com.bean.po.Role;
+import com.bean.po.RoleRepository;
+import com.bean.po.User;
+import com.bean.po.UserRepository;
+import com.util.RedisUtil;
 
 
 /**
@@ -34,6 +37,9 @@ public class ShiroRealm extends AuthorizingRealm {
 	private RoleRepository roleRepository;
 	@Autowired
 	private MenuRepository menuRepository;
+	
+	@Resource
+    private RedisUtil redisUtil;
 
 	/**
 	 * 	获取权限信息
@@ -43,14 +49,16 @@ public class ShiroRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         User user =(User) principals.getPrimaryPrincipal();
         //获取角色
-        Set<Role> roleList = roleRepository.findRolesByUserId(user.getUserId().toString());
+        Set<Role> roleList = roleRepository.getRolesByUserId(user.getUserId().toString());
         Set<String> roleIds = new HashSet<>(roleList.size());
         for (Role role : roleList) {
             authorizationInfo.addRole(role.getRoleAlias());
             roleIds.add(role.getRoleId());
         }
         //获取权限
-        Set<Menu> menuList = menuRepository.findMenusByRoleId(roleIds);
+        Set<Menu> menuList = menuRepository.getMenusByRoleId(roleIds);
+        //将菜单放入缓存
+        redisUtil.set("menuList",menuList);
         for (Menu menu: menuList) {
         	if(menu.getPermission()!=null) {
         		authorizationInfo.addStringPermission(menu.getPermission());

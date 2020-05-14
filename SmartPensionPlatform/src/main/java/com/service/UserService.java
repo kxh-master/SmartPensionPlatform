@@ -5,24 +5,26 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.entity.User;
+import com.bean.bo.UserBo;
+import com.bean.po.User;
+import com.bean.vo.UserVo;
 
 public interface UserService {
 	
-	User findByUserName(String userName);
+	UserVo findByUserName(String userName);
 	
-	User findUserByName(String userName);
+	UserVo findUserByName(String userName);
 	
-	User save(User user);
+	UserVo save(UserBo user);
 	
-	List<User> findAll();
+	List<UserVo> findAll();
 	
 	Integer delete(int userId);
 	
-	Integer update(User user);
+	Integer update(UserBo user);
 	
 //	Page<User> findBookCriteria(Integer page,Integer size,UserQuery userQuery);
 	
-	Page<User> findByCondition(User user, Pageable pageable);
+	Page<UserVo> findByCondition(UserBo user, Pageable pageable);
 
 }

@@ -3,13 +3,10 @@ package com.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bean.bo.UserBo;
+import com.bean.vo.UserVo;
 import com.common.Result;
-import com.entity.User;
 import com.service.UserService;
 import com.util.PasswordUtil;
 import com.util.RedisUtil;
-import com.vo.UserVO;
 
 @RestController
 public class LoginController {
@@ -42,7 +39,7 @@ public class LoginController {
      * @return
      */
 	@RequestMapping(value = "login", method = RequestMethod.POST)
-    public Object doLogin(@RequestBody User user) {
+    public Object doLogin(@RequestBody UserBo user) {
         UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassWord());
         Subject subject = SecurityUtils.getSubject();
         try {
@@ -52,15 +49,12 @@ public class LoginController {
 	    	return Result.validateFailed();
 	    }
         Map<String,Object> map =new HashMap<String,Object>();
-        user = userService.findUserByName(user.getUserName());
-        UserVO userVO = new UserVO();
-        if(user!=null) {
-        	BeanUtils.copyProperties(user, userVO);
-        	subject.getSession().setAttribute("user", userVO);
-        }
+        
         map.put("token",subject.getSession().getId());
-        map.put("user",userVO);
-        redisUtil.set(userVO.getUserName(),userVO,10);
+        map.put("userName", user.getUserName());
+        
+//        map.put("user",userVO);
+//        redisUtil.set(userVO.getUserName(),userVO,10);
         return Result.success(map);
     }
 	
@@ -70,7 +64,7 @@ public class LoginController {
 	 */
 	@RequestMapping("logout")
     public Object logout() {
-		UserVO user = (UserVO) SecurityUtils.getSubject().getSession().getAttribute("user");
+		UserVo user = (UserVo) SecurityUtils.getSubject().getSession().getAttribute("user");
 		//删除缓存
 		redisUtil.del(user.getUserName());
     	return "请重新登录";
@@ -94,7 +88,7 @@ public class LoginController {
      */
     @GetMapping("register")
     public Object register(@RequestParam String userName, @RequestParam String passWord) {
-        User user = new User();
+        UserBo user = new UserBo();
         user.setUserName(userName);
         user.setPassWord(passWord);
         passwordUtil.encryptPassword(user);

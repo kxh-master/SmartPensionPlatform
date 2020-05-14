@@ -7,7 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.entity.User;
+import com.bean.po.User;
 import com.util.RedisUtil;
 
 @RequestMapping("redis")

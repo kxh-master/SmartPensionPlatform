@@ -120,7 +120,7 @@ public class ShiroConfig {
         RedisCacheManager redisCacheManager = new RedisCacheManager();
         redisCacheManager.setRedisManager(redisManager());
         //redis中针对不同用户缓存
-        redisCacheManager.setPrincipalIdFieldName("userId");
+        redisCacheManager.setPrincipalIdFieldName("userName");
         //用户权限信息缓存时间
         redisCacheManager.setExpire(cachetime);
         return redisCacheManager;

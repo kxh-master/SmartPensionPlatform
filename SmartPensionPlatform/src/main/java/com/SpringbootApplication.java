@@ -13,7 +13,7 @@ public class SpringbootApplication {
     public static void main( String[] args ){
     	System.setProperty("spring.devtools.restart.enabled", "false");
     	SpringApplication.run(SpringbootApplication.class, args);
-        System.out.println( "Hello World!" );
+        System.out.println( "Success!" );
     }
     
 }
