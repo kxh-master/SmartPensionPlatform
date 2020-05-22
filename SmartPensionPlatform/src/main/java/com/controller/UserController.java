@@ -3,7 +3,6 @@ package com.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,6 +24,7 @@ import com.service.MenuService;
 import com.service.RoleService;
 import com.service.UserService;
 import com.util.BaseUtil;
+import com.util.PackageUtil;
 import com.util.RedisUtil;
 
 @RestController
@@ -58,12 +58,12 @@ public class UserController {
             	redisUtil.set("roleList", roleList);
             }
             //获取菜单以及权限
-            Set<MenuVo> menuList = menuService.getMenusByRoleId(roleIds);
+            List<MenuVo> menuList = menuService.getMenusByRoleId(roleIds);
             if(menuList!=null && !menuList.isEmpty()) {
             	redisUtil.set("menuList", menuList);
             	List<MenuVo> menuVoList = new ArrayList<MenuVo>();
             	//封装成前台需要的格式
-            	menuVoList = packageMenuList(menuVoList,menuList,"0",null);
+            	menuVoList =PackageUtil.packageMenuList(menuVoList,menuList,"0",null);
             	map.put("menus", menuVoList);
             }
             map.put("user", userVo);
@@ -121,48 +121,4 @@ public class UserController {
     	}
     	return Result.failed();
     }
-    
-    /**
-     * 	封装菜单权限数据
-     * @param menuList
-     * @param menuVoList
-     * @return
-     */
-    public List<MenuVo> packageMenuList(List<MenuVo> menuList,Set<MenuVo> menuVoList,String parentId,MenuVo menuVo){
-		Iterator<MenuVo> iterator = menuVoList.iterator();
-		List<MenuVo> childrenList = new ArrayList<MenuVo>();
-        while (iterator.hasNext()){
-        	if(menuVoList!=null && !menuVoList.isEmpty()) {
-        		MenuVo menuVo1 = iterator.next();
-            	if(parentId.equals(menuVo1.getParentId().toString())) {
-            		//判断是菜单还是按钮
-            		if(menuVo1.getMenu_type()==1) {
-        				menuVo1.setHidden(false);
-        			}else if(menuVo1.getMenu_type()==2) {
-        				menuVo1.setHidden(false);
-        			}
-            		
-            		//匹配完的就刪掉,提高效率
-                    iterator.remove();
-            		if("0".equals(parentId)) {
-            			menuList.add(menuVo1);
-                        packageMenuList(menuList,menuVoList,menuVo1.getMenuId().toString(),menuVo1);
-            		}else {
-            			if(menuVo1.getMenuUrl()!=null) {
-            				menuVo1.setMenuUrl(menuVo1.getMenuUrl().substring(menuVo1.getMenuUrl().lastIndexOf("/")+1));
-            			}
-        				childrenList.add(menuVo1);
-        				packageMenuList(menuList,menuVoList,menuVo1.getMenuId().toString(),menuVo1);
-            		}
-                }
-        	}else {
-        		break;
-        	}
-        }
-        if(menuVo!=null && !childrenList.isEmpty()) {
-        	menuVo.setChildren(childrenList);
-        }
-		return menuList;
-    }
-
 }

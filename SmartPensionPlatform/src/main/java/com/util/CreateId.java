@@ -4,32 +4,13 @@ import java.util.Date;
 import java.util.Random;
 
 /**
- * @author weiqiyi
- * @E-mail weiqiyi2000@yahoo.com.cn
- * @createTime 2014/7/30 上午 9:47:56
- * @类说明
- * @copyright eprint
+ * 生成uuid
+ * @author kxh
+ *
  */
 public class CreateId {
 	// private static CreateId instance = null;
 	public static int count = 0;
-
-	// private CreateId() {
-	//
-	// }
-	//
-	// private static synchronized void syncInit() {
-	// if (instance == null) {
-	// instance = new CreateId();
-	// }
-	// }
-	//
-	// public static CreateId getInstance() {
-	// if (instance == null) {
-	// syncInit();
-	// }
-	// return instance;
-	// }
 
 	public static synchronized String getid() throws Exception {
 		if (CreateId.count > 998) {

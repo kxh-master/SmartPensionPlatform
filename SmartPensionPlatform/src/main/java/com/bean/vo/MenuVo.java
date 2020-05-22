@@ -17,7 +17,7 @@ public class MenuVo implements Serializable{
 	
 	private Integer parentId;
 	
-	private Short menu_type;
+	private Short menuType;
 	
 	private String icon;
 	
@@ -34,6 +34,8 @@ public class MenuVo implements Serializable{
 	private List<MenuVo> children;
 	
 	private Boolean hidden;
+	
+	private Boolean isMenuGroup;
 	
 	public Integer getMenuId() {
 		return menuId;
@@ -71,12 +73,7 @@ public class MenuVo implements Serializable{
 	public void setPermission(String permission) {
 		this.permission = permission;
 	}
-	public Short getMenu_type() {
-		return menu_type;
-	}
-	public void setMenu_type(Short menu_type) {
-		this.menu_type = menu_type;
-	}
+	
 	public Short getShowFlag() {
 		return showFlag;
 	}
@@ -88,6 +85,12 @@ public class MenuVo implements Serializable{
 	}
 	public void setAddTime(Date addTime) {
 		this.addTime = addTime;
+	}
+	public Short getMenuType() {
+		return menuType;
+	}
+	public void setMenuType(Short menuType) {
+		this.menuType = menuType;
 	}
 	public Date getUpdateTime() {
 		return updateTime;
@@ -113,6 +116,14 @@ public class MenuVo implements Serializable{
 	public void setHidden(Boolean hidden) {
 		this.hidden = hidden;
 	}
+	public Boolean getIsMenuGroup() {
+		return isMenuGroup;
+	}
+	public void setIsMenuGroup(Boolean isMenuGroup) {
+		this.isMenuGroup = isMenuGroup;
+	}
+	
+	
 	
 }
 

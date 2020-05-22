@@ -34,8 +34,8 @@ public class Menu implements Serializable{
 	@Column(name="parent_id",columnDefinition="bigint(36) COMMENT'父类id' ")
 	private Integer parentId;
 	
-	@Column(name="",columnDefinition="tinyint(4) COMMENT'菜单类型,0:菜单,1:按钮' ")
-	private Short menu_type;
+	@Column(name="menu_type",columnDefinition="tinyint(4) COMMENT'菜单类型,1:菜单组,2:菜单,3:按钮' ")
+	private Short menuType;
 	
 	@Column(name="",columnDefinition="varchar(50) COMMENT'图标'  ")
 	private String icon;
@@ -100,11 +100,11 @@ public class Menu implements Serializable{
 	public void setPermission(String permission) {
 		this.permission = permission;
 	}
-	public Short getMenu_type() {
-		return menu_type;
+	public Short getMenuType() {
+		return menuType;
 	}
-	public void setMenu_type(Short menu_type) {
-		this.menu_type = menu_type;
+	public void setMenuType(Short menuType) {
+		this.menuType = menuType;
 	}
 	public Short getShowFlag() {
 		return showFlag;

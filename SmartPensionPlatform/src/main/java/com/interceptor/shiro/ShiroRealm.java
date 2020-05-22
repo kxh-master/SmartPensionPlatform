@@ -2,6 +2,7 @@ package com.interceptor.shiro;
 
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -56,7 +57,7 @@ public class ShiroRealm extends AuthorizingRealm {
             roleIds.add(role.getRoleId());
         }
         //获取权限
-        Set<Menu> menuList = menuRepository.getMenusByRoleId(roleIds);
+        List<Menu> menuList = menuRepository.getMenusByRoleId(roleIds);
         //将菜单放入缓存
         redisUtil.set("menuList",menuList);
         for (Menu menu: menuList) {

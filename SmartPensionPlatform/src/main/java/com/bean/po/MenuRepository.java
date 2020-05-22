@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+
 import com.bean.po.base.BaseRepository;
 
 
@@ -17,5 +18,5 @@ public interface MenuRepository extends BaseRepository<Menu,Long>{
 	void updateMenuNameById(String menusname,Integer menusid);
 	
 	@Query(value="select distinct * from sys_menu where delete_flag = 0 and menu_id in (select sm.menu_id from sys_role_menu sm where sm.role_id in(?1))",nativeQuery=true)
-	Set<Menu> getMenusByRoleId(Set<String> roleIds); 
+	List<Menu> getMenusByRoleId(Set<String> roleIds); 
 }
