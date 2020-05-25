@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.bean.bo.RoleBo;
+import com.bean.po.Role;
 import com.bean.vo.RoleVo;
 
 public interface RoleService {
@@ -31,4 +32,18 @@ public interface RoleService {
 	  * @param roleId
 	  */
 	 public void deletePermission(List<String> menuIds ,String roleId);
+	 
+	 /**
+	  * 新增角色
+	  * @param roleBo
+	  * @return
+	  */
+	 public Role addRole(RoleBo roleBo);
+	 
+	 /**
+	  * 删除角色
+	  */
+	 public Integer deleteRoleById(String id);
+	 
+	 
 }

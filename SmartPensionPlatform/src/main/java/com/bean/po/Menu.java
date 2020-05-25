@@ -22,8 +22,8 @@ public class Menu implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="menu_id",columnDefinition="bigint(36) COMMENT'菜单id' ")
-	private Integer menuId;
+	@Column(name="menu_id",columnDefinition="varchar(36) COMMENT'菜单id' ")
+	private String menuId;
 	
 	@Column(name="menu_name",columnDefinition="varchar(50) COMMENT'菜单名' ")
 	private String menuName;
@@ -32,7 +32,7 @@ public class Menu implements Serializable{
 	private String menuUrl;
 	
 	@Column(name="parent_id",columnDefinition="bigint(36) COMMENT'父类id' ")
-	private Integer parentId;
+	private String parentId;
 	
 	@Column(name="menu_type",columnDefinition="tinyint(4) COMMENT'菜单类型,1:菜单组,2:菜单,3:按钮' ")
 	private Short menuType;
@@ -58,14 +58,17 @@ public class Menu implements Serializable{
 	@Column(name="update_time",columnDefinition="datetime COMMENT'修改时间' ")
 	private Date updateTime;
 	
-	public Integer getMenuId() {
-		return menuId;
-	}
-	public void setMenuId(Integer menuId) {
-		this.menuId = menuId;
-	}
+	@Column(name="sortno",columnDefinition="int(10) COMMENT'排序' ")
+	private Integer sortno;
+	
 	public String getMenuName() {
 		return menuName;
+	}
+	public String getMenuId() {
+		return menuId;
+	}
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
 	}
 	public void setMenuName(String menuName) {
 		this.menuName = menuName;
@@ -75,12 +78,6 @@ public class Menu implements Serializable{
 	}
 	public void setMenuUrl(String menuUrl) {
 		this.menuUrl = menuUrl;
-	}
-	public Integer getParentId() {
-		return parentId;
-	}
-	public void setParentId(Integer parentId) {
-		this.parentId = parentId;
 	}
 	public Short getDeleteFlag() {
 		return deleteFlag;
@@ -130,11 +127,18 @@ public class Menu implements Serializable{
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
-	
-	
-	
-	
-	
+	public String getParentId() {
+		return parentId;
+	}
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+	public Integer getSortno() {
+		return sortno;
+	}
+	public void setSortno(Integer sortno) {
+		this.sortno = sortno;
+	}
 }
 
 	

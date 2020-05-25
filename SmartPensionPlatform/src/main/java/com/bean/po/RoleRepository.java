@@ -42,4 +42,8 @@ public interface RoleRepository extends BaseRepository<Role,Long>{
 	@Modifying
 	void deletePermission(String roleId,List<String> menuId);
 	
+	@Query(value="update sys_role set delete_flag=1 where role_id = ?1",nativeQuery=true)
+	@Modifying
+	int deleteRoleById(String roleId);
+	
 }

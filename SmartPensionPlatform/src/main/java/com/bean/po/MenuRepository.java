@@ -19,4 +19,10 @@ public interface MenuRepository extends BaseRepository<Menu,Long>{
 	
 	@Query(value="select distinct * from sys_menu where delete_flag = 0 and menu_id in (select sm.menu_id from sys_role_menu sm where sm.role_id in(?1))",nativeQuery=true)
 	List<Menu> getMenusByRoleId(Set<String> roleIds); 
+	
+	@Query(value="select * from sys_menu where delete_flag = 0 ",nativeQuery=true)
+	List<Menu> getMenuList();
+	
+	Menu findMenuByMenuId(String menuId);
+
 }

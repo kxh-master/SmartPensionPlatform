@@ -1,15 +1,19 @@
 package com.util;
 
+import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
-
-import com.util.CreateId;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 
 public class BaseUtil {
 	/**
@@ -109,6 +113,38 @@ public class BaseUtil {
         }
         return diff;
  
+    }
+    
+    /**
+     * 所有为空值的属性都不copy
+     * @param source id查出的数据
+     * @param target 更新的数据
+     */
+    public static void copyNotNullProperties(Object source, Object target) {
+      BeanUtils.copyProperties(source, target, getNullField(source));
+    }
+   
+    /**
+     * 获取属性中为空的字段
+     *
+     * @param target
+     * @return
+     */
+    private static String[] getNullField(Object target) {
+      BeanWrapper beanWrapper = new BeanWrapperImpl(target);
+      PropertyDescriptor[] propertyDescriptors = beanWrapper.getPropertyDescriptors();
+      Set<String> notNullFieldSet = new HashSet<>();
+      if (propertyDescriptors.length > 0) {
+        for (PropertyDescriptor p : propertyDescriptors) {
+          String name = p.getName();
+          Object value = beanWrapper.getPropertyValue(name);
+          if (Objects.isNull(value)) {
+            notNullFieldSet.add(name);
+          }
+        }
+      }
+      String[] notNullField = new String[notNullFieldSet.size()];
+      return notNullFieldSet.toArray(notNullField);
     }
 
 }

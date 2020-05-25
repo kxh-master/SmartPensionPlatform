@@ -1,13 +1,11 @@
-package com.bean.vo;
+package com.bean.bo;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.bean.vo.MenuVo;
 
-public class MenuVo implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+public class MenuBo {
 
 	private String menuId;
 	
@@ -31,100 +29,103 @@ public class MenuVo implements Serializable{
 	
 	private Date updateTime;
 	
-	private List<MenuVo> children;
-	
-	private Boolean hidden;
-	
-	private Boolean isMenuGroup;
+	private Integer sortno;
 	
 	public String getMenuId() {
 		return menuId;
 	}
+
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
 	}
+
 	public String getMenuName() {
 		return menuName;
 	}
+
 	public void setMenuName(String menuName) {
 		this.menuName = menuName;
 	}
+
 	public String getMenuUrl() {
 		return menuUrl;
 	}
+
 	public void setMenuUrl(String menuUrl) {
 		this.menuUrl = menuUrl;
 	}
-	public String getParentId() {
-		return parentId;
-	}
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
-	}
-	public Short getDeleteFlag() {
-		return deleteFlag;
-	}
-	public void setDeleteFlag(Short deleteFlag) {
-		this.deleteFlag = deleteFlag;
-	}
-	public String getPermission() {
-		return permission;
-	}
-	public void setPermission(String permission) {
-		this.permission = permission;
-	}
-	
-	public Short getShowFlag() {
-		return showFlag;
-	}
-	public void setShowFlag(Short showFlag) {
-		this.showFlag = showFlag;
-	}
-	public Date getAddTime() {
-		return addTime;
-	}
-	public void setAddTime(Date addTime) {
-		this.addTime = addTime;
-	}
+
 	public Short getMenuType() {
 		return menuType;
 	}
+
 	public void setMenuType(Short menuType) {
 		this.menuType = menuType;
 	}
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
+
 	public String getIcon() {
 		return icon;
 	}
+
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
-	public List<MenuVo> getChildren() {
-		return children;
+
+	public String getPermission() {
+		return permission;
 	}
-	public void setChildren(List<MenuVo> children) {
-		this.children = children;
+
+	public void setPermission(String permission) {
+		this.permission = permission;
 	}
-	public Boolean getHidden() {
-		return hidden;
+
+	public Short getShowFlag() {
+		return showFlag;
 	}
-	public void setHidden(Boolean hidden) {
-		this.hidden = hidden;
+
+	public void setShowFlag(Short showFlag) {
+		this.showFlag = showFlag;
 	}
-	public Boolean getIsMenuGroup() {
-		return isMenuGroup;
+
+	public Short getDeleteFlag() {
+		return deleteFlag;
 	}
-	public void setIsMenuGroup(Boolean isMenuGroup) {
-		this.isMenuGroup = isMenuGroup;
+
+	public void setDeleteFlag(Short deleteFlag) {
+		this.deleteFlag = deleteFlag;
 	}
-	
-	
-	
-}
+
+	public Date getAddTime() {
+		return addTime;
+	}
+
+	public void setAddTime(Date addTime) {
+		this.addTime = addTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	public Integer getSortno() {
+		return sortno;
+	}
+
+	public void setSortno(Integer sortno) {
+		this.sortno = sortno;
+	}
 
 	
+}

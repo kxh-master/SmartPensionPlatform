@@ -84,11 +84,24 @@ public class RoleServiceImpl implements RoleService{
 	}
 	
 	/**
+	  * 新增角色
+	  * @param roleBo
+	  * @return
+	  */
+	 public Role addRole(RoleBo roleBo) {
+		 return roleRepository.save(((Role) BaseUtil.copyProperties(roleBo,new Role())));
+	 }
+	 
+	/**
 	 * 	删除权限
 	 */
 	public void deletePermission(List<String> menuIds ,String roleId) {
 		roleRepository.deletePermission(roleId,menuIds);
 	}
 
+	
+	public Integer deleteRoleById(String id) {
+		return roleRepository.deleteRoleById(id);
+	}
 
 }
