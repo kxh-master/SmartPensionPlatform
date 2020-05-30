@@ -21,7 +21,7 @@ public class Menu implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+//	@GeneratedValue(strategy=GenerationType.IDENTITY) //设置id自增长
 	@Column(name="menu_id",columnDefinition="varchar(36) COMMENT'菜单id' ")
 	private String menuId;
 	
